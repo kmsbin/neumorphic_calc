@@ -5,26 +5,56 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:calculator/main.dart';
+import '../lib/math_calc/operator_repository.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+  group("test from OperatorRepository", () {
+    OperatorRepository _operatorRepository;
+    test("testing operationPreparer functionality must return a list of double",
+        () {
+      _operatorRepository = SumRepository();
+      expect(_operatorRepository.operationPreparer("20+20"), [20, 20]);
+      expect(_operatorRepository.operationPreparer("15 + 123"), [15, 123]);
+      expect(_operatorRepository.operationPreparer(" 15+123 "), [15, 123]);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+      expect(_operatorRepository.operation(20, 20), 40);
+      expect(_operatorRepository.operation(15, 2), 17);
+      expect(_operatorRepository.operation(1, 112), 113);
+    });
+    test("testing operationPreparer functionality must return a list of double",
+        () {
+      _operatorRepository = SubtractRepository();
+      expect(_operatorRepository.operationPreparer("20-20"), [20, 20]);
+      expect(_operatorRepository.operationPreparer("15 - 123"), [15, 123]);
+      expect(_operatorRepository.operationPreparer(" 15-123 "), [15, 123]);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+      expect(_operatorRepository.operation(20, 20), 0);
+      expect(_operatorRepository.operation(15, 2), 13);
+      expect(_operatorRepository.operation(1, 112), -111);
+    });
+    test("testing operationPreparer functionality must return a list of double",
+        () {
+      _operatorRepository = MultiplicateRepository();
+      expect(_operatorRepository.operationPreparer("20*20"), [20, 20]);
+      expect(_operatorRepository.operationPreparer("15 * 123"), [15, 123]);
+      expect(_operatorRepository.operationPreparer(" 15*123 "), [15, 123]);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+      expect(_operatorRepository.operation(20, 20), 400);
+      expect(_operatorRepository.operation(15, 2), 30);
+      expect(_operatorRepository.operation(1, 112), 112);
+    });
+    test("testing operationPreparer functionality must return a list of double",
+        () {
+      _operatorRepository = DivisionRepository();
+      expect(_operatorRepository.operationPreparer("20/20"), [20, 20]);
+      expect(_operatorRepository.operationPreparer("15 / 123"), [15, 123]);
+      expect(_operatorRepository.operationPreparer(" 15/123 "), [15, 123]);
+
+      expect(_operatorRepository.operation(40, 20), 2);
+      expect(_operatorRepository.operation(14, 2), 7);
+      expect(_operatorRepository.operation(100, 10), 10);
+    });
   });
 }
