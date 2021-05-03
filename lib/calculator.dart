@@ -1,4 +1,7 @@
+import 'package:calculator/bloc/enter_bloc.dart';
+import 'package:calculator/bloc/enter_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeCalculator extends StatefulWidget {
   @override
@@ -6,14 +9,17 @@ class HomeCalculator extends StatefulWidget {
 }
 
 class _HomeCalculatorState extends State<HomeCalculator> {
+  EnterBloc enterBloc = EnterBloc();
   String inputValue = '';
-  Widget operator(IconData icon) {
+  Widget operator(Widget icon, String operation) {
     return Expanded(
       child: Container(
         margin: EdgeInsets.all(10),
         child: ElevatedButton(
-          onPressed: () {},
-          child: Icon(icon),
+          onPressed: () {
+            enterBloc.add(OperationEvent(operation));
+          },
+          child: icon,
         ),
       ),
     );
@@ -25,9 +31,9 @@ class _HomeCalculatorState extends State<HomeCalculator> {
         margin: EdgeInsets.all(10),
         child: ElevatedButton(
           onPressed: () {
-            setState(() {
-              inputValue += title;
-            });
+            enterBloc.add(NumberEvent(title));
+
+            // inputValue += title;
           },
           child: Text(
             title,
@@ -39,27 +45,35 @@ class _HomeCalculatorState extends State<HomeCalculator> {
   }
 
   @override
+  void dispose() {
+    enterBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    final double numbContainerWidth = MediaQuery.of(context).size.width * 0.75;
-    final double operationContainerWidth = MediaQuery.of(context).size.width * 0.25;
 
     return Scaffold(
-        appBar: null,
         backgroundColor: Colors.grey[200],
         body: SafeArea(
             child: Column(
           children: [
             SizedBox(
               height: screenSize.height * 0.25,
-              child: Container(
-                color: Colors.amber,
-                alignment: Alignment.centerRight,
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  inputValue,
-                  style: TextStyle(color: Colors.black54, fontSize: 50),
-                ),
+              child: BlocBuilder<EnterBloc, EnterState>(
+                bloc: enterBloc,
+                builder: (context, state) {
+                  return Container(
+                    color: Colors.amber,
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      state.toString(),
+                      style: TextStyle(color: Colors.black54, fontSize: 50),
+                    ),
+                  );
+                },
               ),
             ),
             Expanded(
@@ -149,10 +163,15 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                                 ),
                               ),
                             ),
-                            button("\u00F7"),
-                            operator(Icons.clear),
-                            operator(Icons.remove),
-                            operator(Icons.add),
+                            operator(
+                                Text(
+                                  "\u00F7",
+                                  style: TextStyle(fontSize: 30),
+                                ),
+                                "\u00F7"),
+                            operator(Icon(Icons.clear), 'x'),
+                            operator(Icon(Icons.remove), '-'),
+                            operator(Icon(Icons.add), '+'),
                           ],
                         ),
                       )),
