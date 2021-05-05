@@ -1,34 +1,30 @@
 import 'package:calculator/bloc/enter_event.dart';
+import 'package:calculator/bloc/enter_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum EnterState { operation, number, none }
-
 class EnterBloc extends Bloc<EnterEvent, EnterState> {
-  EnterState typeState = EnterState.none;
-  StringBuffer _expressionBuffer = StringBuffer();
+  EnterState typeState = EnterState();
 
-  EnterBloc() : super(EnterState.none);
+  EnterBloc() : super(EnterState());
 
   @override
   Stream<EnterState> mapEventToState(EnterEvent event) async* {
-    if (event is OperationEvent && typeState == EnterState.operation) {
-      print('operation');
-      return;
+    if (event is NumberEvent) {
+      typeState.enterNewNumber(event.data);
+      print('number');
+      print(typeState.expressionBuffer.toString());
+
+      yield typeState;
     }
     if (event is OperationEvent) {
-      print('operation');
-      typeState = EnterState.operation;
-      return;
+      typeState.enterNewOperationBuffer(event.data);
+      print(typeState.expressionBuffer.toString());
+      yield typeState;
     }
-    typeState = EnterState.number;
-    print(event.data);
-    _expressionBuffer.write(event.data);
     yield typeState;
   }
 
   String printEntireExpression() {
-    print(_expressionBuffer.toString());
-
-    return _expressionBuffer.toString();
+    return typeState.operationBuffer.toString();
   }
 }

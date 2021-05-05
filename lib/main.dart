@@ -1,11 +1,14 @@
+import 'package:calculator/bloc/enter_bloc.dart';
 import 'package:calculator/calculator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {  // This widget is the root of your application.
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +18,10 @@ class MyApp extends StatelessWidget {  // This widget is the root of your applic
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeCalculator(),
+      home: BlocProvider(
+        create: (context) => EnterBloc(),
+        child: HomeCalculator(),
+      ),
     );
   }
 }

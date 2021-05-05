@@ -1,5 +1,6 @@
 import 'package:calculator/bloc/enter_bloc.dart';
 import 'package:calculator/bloc/enter_event.dart';
+import 'package:calculator/bloc/enter_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,38 +12,6 @@ class HomeCalculator extends StatefulWidget {
 class _HomeCalculatorState extends State<HomeCalculator> {
   EnterBloc enterBloc = EnterBloc();
   String inputValue = '';
-  Widget operator(Widget icon, String operation) {
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.all(10),
-        child: ElevatedButton(
-          onPressed: () {
-            enterBloc.add(OperationEvent(operation));
-          },
-          child: icon,
-        ),
-      ),
-    );
-  }
-
-  Widget button(String title) {
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.all(10),
-        child: ElevatedButton(
-          onPressed: () {
-            enterBloc.add(NumberEvent(title));
-
-            // inputValue += title;
-          },
-          child: Text(
-            title,
-            style: TextStyle(fontSize: 20),
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   void dispose() {
@@ -52,6 +21,39 @@ class _HomeCalculatorState extends State<HomeCalculator> {
 
   @override
   Widget build(BuildContext context) {
+    Widget operator(Widget icon, String operation) {
+      return Expanded(
+        child: Container(
+          margin: EdgeInsets.all(10),
+          child: ElevatedButton(
+            onPressed: () {
+              BlocProvider.of<EnterBloc>(context).add(OperationEvent(operation));
+            },
+            child: icon,
+          ),
+        ),
+      );
+    }
+
+    Widget button(String title) {
+      return Expanded(
+        child: Container(
+          margin: EdgeInsets.all(10),
+          child: ElevatedButton(
+            onPressed: () {
+              BlocProvider.of<EnterBloc>(context).add(NumberEvent(title));
+
+              // inputValue += title;
+            },
+            child: Text(
+              title,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ),
+      );
+    }
+
     var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -61,19 +63,26 @@ class _HomeCalculatorState extends State<HomeCalculator> {
           children: [
             SizedBox(
               height: screenSize.height * 0.25,
-              child: BlocBuilder<EnterBloc, EnterState>(
-                bloc: enterBloc,
-                builder: (context, state) {
-                  return Container(
-                    color: Colors.amber,
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      state.toString(),
-                      style: TextStyle(color: Colors.black54, fontSize: 50),
-                    ),
-                  );
+              child: BlocListener<EnterBloc, EnterState>(
+                bloc: BlocProvider.of<EnterBloc>(context),
+                listener: (context, state) {
+                  print("ESTADO ----" + state.printExpression());
                 },
+                child: BlocBuilder<EnterBloc, EnterState>(
+                  bloc: BlocProvider.of<EnterBloc>(context),
+                  builder: (context, state) {
+                    print(state);
+                    return Container(
+                      color: Colors.amber,
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        state.printExpression(),
+                        style: TextStyle(color: Colors.black54, fontSize: 50),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
             Expanded(
@@ -145,16 +154,12 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                                 child: ElevatedButton(
                                   onLongPress: () {
                                     print('sdgfgdf');
-                                    setState(() {
-                                      inputValue = "";
-                                    });
+                                    inputValue = "";
                                   },
                                   onPressed: () {
-                                    setState(() {
-                                      if (inputValue.length > 0) {
-                                        inputValue = inputValue.substring(0, inputValue.length - 1);
-                                      }
-                                    });
+                                    if (inputValue.length > 0) {
+                                      inputValue = inputValue.substring(0, inputValue.length - 1);
+                                    }
                                   },
                                   child: Text(
                                     "\u232b",
