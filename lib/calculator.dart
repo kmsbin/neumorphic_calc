@@ -63,12 +63,12 @@ class _HomeCalculatorState extends State<HomeCalculator> {
           children: [
             SizedBox(
               height: screenSize.height * 0.25,
-              child: BlocListener<EnterBloc, EnterState>(
+              child: BlocListener<EnterBloc, String>(
                 bloc: BlocProvider.of<EnterBloc>(context),
                 listener: (context, state) {
-                  print("ESTADO ----" + state.printExpression());
+                  print("ESTADO ----" + state);
                 },
-                child: BlocBuilder<EnterBloc, EnterState>(
+                child: BlocBuilder<EnterBloc, String>(
                   bloc: BlocProvider.of<EnterBloc>(context),
                   builder: (context, state) {
                     print(state);
@@ -77,7 +77,7 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                       alignment: Alignment.centerRight,
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        state.printExpression(),
+                        state,
                         style: TextStyle(color: Colors.black54, fontSize: 50),
                       ),
                     );
