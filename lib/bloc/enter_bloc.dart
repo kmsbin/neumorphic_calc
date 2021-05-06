@@ -5,21 +5,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class EnterBloc extends Bloc<EnterEvent, String> {
   EnterState typeState = EnterState();
 
-  EnterBloc() : super('');
+  EnterBloc() : super("");
 
   @override
   Stream<String> mapEventToState(EnterEvent event) async* {
     if (event is NumberEvent) {
+      print("NumberEvent");
       typeState.enterNewNumber(event.data);
-      print('number');
-      // print(typeState.expressionBuffer.toString());
-
-      yield typeState.printExpression();
-    } else if (event is OperationEvent) {
-      typeState.enterNewOperationBuffer(event.data);
-      // print(typeState.expressionBuffer.toString());
       yield typeState.printExpression();
     }
-    // yield typeState.printExpression();
+    if (event is OperationEvent) {
+      print("OperationEvent");
+      typeState.enterNewOperationBuffer(event.data);
+      yield typeState.printExpression();
+    }
+    if (event is EqualEvent) {
+      print("EqualEvent");
+      yield typeState.equals();
+    }
+    if (event is ClearEvent) {
+      typeState.clearLast();
+      print("ClearEvent");
+      yield typeState.printExpression();
+    }
+    if (event is ClearAllEvent) {
+      typeState.clearAll();
+      print("ClearEvent");
+      yield typeState.printExpression();
+    }
   }
 }

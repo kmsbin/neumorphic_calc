@@ -1,6 +1,5 @@
 import 'package:calculator/bloc/enter_bloc.dart';
 import 'package:calculator/bloc/enter_event.dart';
-import 'package:calculator/bloc/enter_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,13 +20,13 @@ class _HomeCalculatorState extends State<HomeCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    Widget operator(Widget icon, String operation) {
+    Widget operator(Widget icon, EnterEvent operation) {
       return Expanded(
         child: Container(
           margin: EdgeInsets.all(10),
           child: ElevatedButton(
             onPressed: () {
-              BlocProvider.of<EnterBloc>(context).add(OperationEvent(operation));
+              BlocProvider.of<EnterBloc>(context).add(operation);
             },
             child: icon,
           ),
@@ -40,11 +39,7 @@ class _HomeCalculatorState extends State<HomeCalculator> {
         child: Container(
           margin: EdgeInsets.all(10),
           child: ElevatedButton(
-            onPressed: () {
-              BlocProvider.of<EnterBloc>(context).add(NumberEvent(title));
-
-              // inputValue += title;
-            },
+            onPressed: () => BlocProvider.of<EnterBloc>(context).add(NumberEvent(title)),
             child: Text(
               title,
               style: TextStyle(fontSize: 20),
@@ -132,9 +127,9 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    button("."),
+                                    operator(Text('.'), OperationEvent('.')),
                                     button("0"),
-                                    button("="),
+                                    operator(Text('='), EqualEvent()),
                                   ],
                                 ),
                               ),
@@ -153,13 +148,10 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                                 margin: EdgeInsets.all(10),
                                 child: ElevatedButton(
                                   onLongPress: () {
-                                    print('sdgfgdf');
-                                    inputValue = "";
+                                    BlocProvider.of<EnterBloc>(context).add(ClearAllEvent());
                                   },
                                   onPressed: () {
-                                    if (inputValue.length > 0) {
-                                      inputValue = inputValue.substring(0, inputValue.length - 1);
-                                    }
+                                    BlocProvider.of<EnterBloc>(context).add(ClearEvent());
                                   },
                                   child: Text(
                                     "\u232b",
@@ -173,10 +165,10 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                                   "\u00F7",
                                   style: TextStyle(fontSize: 30),
                                 ),
-                                "\u00F7"),
-                            operator(Icon(Icons.clear), 'x'),
-                            operator(Icon(Icons.remove), '-'),
-                            operator(Icon(Icons.add), '+'),
+                                OperationEvent("/")),
+                            operator(Icon(Icons.clear), OperationEvent('x')),
+                            operator(Icon(Icons.remove), OperationEvent('-')),
+                            operator(Icon(Icons.add), OperationEvent('+')),
                           ],
                         ),
                       )),

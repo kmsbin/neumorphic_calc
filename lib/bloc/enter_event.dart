@@ -1,12 +1,14 @@
 import 'package:equatable/equatable.dart';
 
-abstract class EnterEvent extends Equatable {
+enum Operation { multiplication, division, subtraction, summation, none }
+
+abstract class EnterEvent {}
+
+abstract class EnterWithDataOperationEvent extends Equatable {
   final String data = '';
 }
 
-enum Operation { multiplication, division, subtraction, summation, none }
-
-class OperationEvent implements EnterEvent {
+class OperationEvent implements EnterEvent, EnterWithDataOperationEvent {
   @override
   final String data;
   OperationEvent(this.data);
@@ -18,7 +20,7 @@ class OperationEvent implements EnterEvent {
   bool get stringify => false;
 }
 
-class NumberEvent implements EnterEvent {
+class NumberEvent implements EnterEvent, EnterWithDataOperationEvent {
   @override
   final String data;
   NumberEvent(this.data);
@@ -29,3 +31,9 @@ class NumberEvent implements EnterEvent {
   @override
   bool get stringify => false;
 }
+
+class EqualEvent implements EnterEvent {}
+
+class ClearEvent implements EnterEvent {}
+
+class ClearAllEvent implements EnterEvent {}
