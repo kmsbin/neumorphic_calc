@@ -9,7 +9,7 @@ class EnterState extends Equatable {
     '+': SumRepository(),
     '-': SubtractRepository(),
     '/': DivisionRepository(),
-    '*': MultiplicateRepository(),
+    'x': MultiplicateRepository(),
   };
 
   void enterNewNumber(final String enteredNumber) {
@@ -44,9 +44,7 @@ class EnterState extends Equatable {
 
   String equals() {
     operations?.asMap()?.forEach((key, value) {
-      numbersParameters[key + 1] = mathOperatorMap[value]
-          .operation(double.parse(numbersParameters[key]), double.parse(numbersParameters[key + 1]))
-          .toString();
+      numbersParameters[key + 1] = mathOperatorMap[value].operation(double.parse(numbersParameters[key]), double.parse(numbersParameters[key + 1])).toString();
     });
     String expression = numbersParameters.last;
     operations.clear();

@@ -1,5 +1,6 @@
 import 'package:calculator/bloc/enter_bloc.dart';
 import 'package:calculator/bloc/enter_event.dart';
+import 'package:calculator/neumorphic_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,11 +25,12 @@ class _HomeCalculatorState extends State<HomeCalculator> {
       return Expanded(
         child: Container(
           margin: EdgeInsets.all(10),
-          child: ElevatedButton(
+          child: NeumorphicContainer(
+            color: Colors.blueGrey.shade200,
             onPressed: () {
               BlocProvider.of<EnterBloc>(context).add(operation);
             },
-            child: icon,
+            child: Center(child: icon),
           ),
         ),
       );
@@ -38,11 +40,14 @@ class _HomeCalculatorState extends State<HomeCalculator> {
       return Expanded(
         child: Container(
           margin: EdgeInsets.all(10),
-          child: ElevatedButton(
+          child: NeumorphicContainer(
+            color: Colors.blueGrey.shade200,
             onPressed: () => BlocProvider.of<EnterBloc>(context).add(NumberEvent(title)),
-            child: Text(
-              title,
-              style: TextStyle(fontSize: 20),
+            child: Center(
+              child: Text(
+                title,
+                style: TextStyle(fontSize: 30, color: Colors.black38),
+              ),
             ),
           ),
         ),
@@ -52,7 +57,7 @@ class _HomeCalculatorState extends State<HomeCalculator> {
     var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.blueGrey.shade200,
         body: SafeArea(
             child: Column(
           children: [
@@ -68,7 +73,7 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                   builder: (context, state) {
                     print(state);
                     return Container(
-                      color: Colors.amber,
+                      color: Colors.blueGrey.shade200,
                       alignment: Alignment.centerRight,
                       padding: EdgeInsets.all(10),
                       child: Text(
@@ -85,7 +90,7 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                 children: [
                   Expanded(
                       child: Container(
-                          color: Colors.blue,
+                          color: Colors.blueGrey.shade200,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -127,9 +132,19 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                                   crossAxisAlignment: CrossAxisAlignment.stretch,
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    operator(Text('.'), OperationEvent('.')),
+                                    operator(
+                                        Text(
+                                          '.',
+                                          style: TextStyle(fontSize: 30, color: Colors.black38),
+                                        ),
+                                        OperationEvent('.')),
                                     button("0"),
-                                    operator(Text('='), EqualEvent()),
+                                    operator(
+                                        Text(
+                                          '=',
+                                          style: TextStyle(fontSize: 30, color: Colors.black38),
+                                        ),
+                                        EqualEvent()),
                                   ],
                                 ),
                               ),
@@ -138,7 +153,7 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                   SizedBox(
                       width: screenSize.width * 0.25,
                       child: Container(
-                        color: Colors.yellow,
+                        color: Colors.blueGrey.shade200,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -146,29 +161,27 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                             Expanded(
                               child: Container(
                                 margin: EdgeInsets.all(10),
-                                child: ElevatedButton(
-                                  onLongPress: () {
+                                child: NeumorphicContainer(
+                                  color: Colors.blueGrey.shade200,
+                                  onLongPressed: () {
                                     BlocProvider.of<EnterBloc>(context).add(ClearAllEvent());
                                   },
                                   onPressed: () {
                                     BlocProvider.of<EnterBloc>(context).add(ClearEvent());
                                   },
-                                  child: Text(
-                                    "\u232b",
-                                    style: TextStyle(fontSize: 20),
+                                  child: Center(
+                                    child: Text(
+                                      "\u232b",
+                                      style: TextStyle(fontSize: 30, color: Colors.black38),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                            operator(
-                                Text(
-                                  "\u00F7",
-                                  style: TextStyle(fontSize: 30),
-                                ),
-                                OperationEvent("/")),
-                            operator(Icon(Icons.clear), OperationEvent('x')),
-                            operator(Icon(Icons.remove), OperationEvent('-')),
-                            operator(Icon(Icons.add), OperationEvent('+')),
+                            operator(Text("\u00F7", style: TextStyle(fontSize: 30, color: Colors.black38)), OperationEvent("/")),
+                            operator(Icon(Icons.clear, color: Colors.black38), OperationEvent('x')),
+                            operator(Icon(Icons.remove, color: Colors.black38), OperationEvent('-')),
+                            operator(Icon(Icons.add, color: Colors.black38), OperationEvent('+')),
                           ],
                         ),
                       )),
