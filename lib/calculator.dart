@@ -79,6 +79,8 @@ class _HomeCalculatorState extends State<HomeCalculator> {
                       child: Text(
                         state,
                         style: TextStyle(color: Colors.black54, fontSize: 50),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     );
                   },

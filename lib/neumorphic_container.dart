@@ -32,6 +32,20 @@ class _NeumorphicContainerState extends State<NeumorphicContainer> {
     });
   }
 
+  void _onUpdateStart(LongPressStartDetails details) {
+    widget.onLongPressed();
+    setState(() {
+      _isPressed = true;
+    });
+  }
+
+  void _onUpdateEnd(LongPressEndDetails details) {
+    widget.onLongPressed();
+    setState(() {
+      _isPressed = false;
+    });
+  }
+
   void _onPointerUp(TapUpDetails event) {
     setState(() {
       _isPressed = false;
@@ -45,7 +59,8 @@ class _NeumorphicContainerState extends State<NeumorphicContainer> {
     return GestureDetector(
       onTapDown: _onPointerDown,
       onTapUp: _onPointerUp,
-      onLongPress: widget.onLongPressed,
+      onLongPressEnd: _onUpdateEnd,
+      onLongPressStart: _onUpdateStart,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 50),
         padding: const EdgeInsets.all(24.0),
